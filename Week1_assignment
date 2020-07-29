@@ -1,5 +1,26 @@
 ---- Start Here ----
 
+Data Set: Gapminder
+
+Data Set Varıables:
+breastcancerper100TH : 2002 breast cancer new cases per 100,000 female Number of new cases of breast cancer in 100,000 female residents during the certain year.
+urbanrate : 2008 urban population (% of total).Urban population refers to people living in urban areas as defined by national statistical offices (calculated using World Bank population estimates and urban ratios from the United Nations World Urbanization Prospects)
+
+
+Research Question: How urban rate of population is correlated to breast cencer ratio? I’m expecting population in urban areas are consuming more processed food, and that can increase the risk of getting breast cancer.
+
+References:
+https://link.springer.com/article/10.1007/s10549-009-0427-9
+Our findings indicate that urban women may probably have a higher exposure to xenoestrogens.
+
+https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0117572
+Overall, it was observed that higher socioeconomic status would lead to a higher breast cancer incidence in China. Population density, percentage of non-agriculture population and secondary industry output were significantly correlated with breast cancer incidence, which may imply that not only the disparities between urban and rural regions (lifestyle, diet, reproductive factors etc.), but also the environmental pollutants generated during industrial activities can have an impact on breast cancer incidence.
+
+https://www.nature.com/articles/6604423
+In summary, we observed that urban women were more obese and had relatively larger body size in the early years of life. A positive association was observed between BC risk and augmented anthropometric factors for both pre- and post-menopausal BC among rural and urban women. 
+
+Studies Summary:
+Thez all show Urbanızation is increasing the Breast Cancer risk, based on different facts of urban life
 
 
 ---- Stop Here ----
