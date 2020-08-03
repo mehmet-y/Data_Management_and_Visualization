@@ -1,0 +1,136 @@
+"""
+Week2_assignment
+Created on Mon Aug  3 13:50:59 2020
+@author: mm
+"""
+
+# Importing necessary libraries to be used in program
+import pandas
+
+
+# Reading CSV file into Pandas DataFrame 
+data = pandas.read_csv('gapminder.csv', low_memory=False)
+
+# Next lines will print the the number of Rows, Columns and then the will print empty line for nicer looking output.
+print ('Number of Rows in Table: ', len(data))
+print ('Number of Columns in Table: ', len(data.columns))
+print('')
+
+# Frequency distributions for each value in breastcancerper100th column, sorted in descending order
+print('Frequency distribution of breastcancerper100th column (First line shows empty values): ')
+c1 = data['breastcancerper100th'].value_counts(sort=True)
+print (c1)
+print('')
+
+# Frequency distributions for each value in urbanrate column, sorted in descending order
+print('Frequency distribution of urbanrate column (First line shows empty values): ')
+c2 = data['urbanrate'].value_counts(sort=True)
+print (c2)
+print('')
+
+
+# Since the values in my selected colums are Numeric type, Frequence Distribution itself is not enough to generalize and interpret.
+# Then I decided to sort each colum according to numeric values, in order to get more meaningful result for my thesis from previous week.
+
+# Converting string values in Table into float numbers.
+data['breastcancerper100th'] = pandas.to_numeric(data['breastcancerper100th'], errors='coerce')
+data['urbanrate'] = pandas.to_numeric(data['urbanrate'], errors='coerce')
+
+print('Sorted first 20 countries by Breast Cancer percentile value: ')
+sorted_table = data.sort_values('breastcancerper100th', ascending=False)
+print(sorted_table[['country', 'breastcancerper100th']][:20])
+print('')
+
+print('Sorted first 20 countries by Urbanisation Rate value: ')
+sorted_table = data.sort_values('urbanrate', ascending=False)
+print(sorted_table[['country', 'urbanrate']][:20])
+print('')
+
+
+
+"""
+---------------------------------------
+OUTPUT of Program looks like following:
+---------------------------------------
+Number of Rows in Table:  213
+Number of Columns in Table:  16
+
+Frequency distribution of breastcancerper100th column (First line shows empty values): 
+        40
+28.1     7
+19.5     6
+24.7     4
+31.2     3
+        ..
+29.5     1
+44.8     1
+30.6     1
+49.6     1
+38.5     1
+Name: breastcancerper100th, Length: 137, dtype: int64
+
+Frequency distribution of urbanrate column (First line shows empty values): 
+         10
+100       6
+27.84     2
+65.58     2
+36.84     2
+         ..
+66.9      1
+73.2      1
+77.12     1
+95.64     1
+28.38     1
+Name: urbanrate, Length: 195, dtype: int64
+
+Sorted first 20 countries by Breast Cancer percentile value: 
+            country  breastcancerper100th
+203   United States                 101.1
+17          Belgium                  92.0
+139     New Zealand                  91.9
+64           France                  91.9
+91           Israel                  90.8
+85          Iceland                  90.0
+50          Denmark                  88.7
+184          Sweden                  87.8
+202  United Kingdom                  87.2
+136     Netherlands                  86.7
+63          Finland                  84.7
+32           Canada                  84.3
+9         Australia                  83.2
+204         Uruguay                  83.1
+111      Luxembourg                  82.5
+185     Switzerland                  81.7
+69          Germany                  79.8
+119           Malta                  76.1
+90          Ireland                  74.9
+144          Norway                  74.8
+
+Sorted first 20 countries by Urbanisation Rate value: 
+                  country  urbanrate
+34         Cayman Islands     100.00
+112          Macao, China     100.00
+20                Bermuda     100.00
+173             Singapore     100.00
+83       Hong Kong, China     100.00
+127                Monaco     100.00
+101                Kuwait      98.36
+155           Puerto Rico      98.32
+17                Belgium      97.36
+156                 Qatar      95.64
+119                 Malta      94.26
+165            San Marino      94.22
+207             Venezuela      93.32
+76                   Guam      93.16
+137  Netherlands Antilles      92.68
+204               Uruguay      92.30
+85                Iceland      92.26
+6               Argentina      92.00
+91                 Israel      91.66
+202        United Kingdom      89.94
+
+
+
+"""
+
+
