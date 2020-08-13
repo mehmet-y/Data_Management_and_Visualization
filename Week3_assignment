@@ -1,0 +1,194 @@
+"""
+My theory: 'internetuserate' should increase, by increase in 'employrate' and 'urbanrate'.
+I will investigate my theory in the output of this script.
+@author: mm
+
+Comment after result have seen in output:
+'internetuserate' looks like very much in affected by 'urbanrate', but not that much related to 'employrate'
+
+"""
+
+
+# Importing necessary libraries to be used in program
+import pandas
+import numpy
+
+# Making change in defualt display settings, in order to see result in whole, without cutting some columns.
+pandas.set_option('display.max_rows', 50)
+pandas.set_option('display.max_columns', 20)
+pandas.set_option('display.width', 1000)
+
+
+# Reading CSV file into Pandas DataFrame,and the displaying the dimensions of table.
+data = pandas.read_csv('gapminder.csv', low_memory=False)
+data = data[['country', 'internetuserate', 'employrate', 'urbanrate']]
+# Next lines will print the the number of Rows, Columns and then the will print empty line for nicer looking output.
+print('--------------------------------------------------------------------------------')
+print ('Number of Rows in Original Table: ', len(data))
+print ('Number of Columns in Original Table: ', len(data.columns))
+print('--------------------------------------------------------------------------------')
+print('')
+
+
+# Need to convert values to integer, in order to be able make some aritmetic operations.
+# Converting string values in Table into float numbers.
+data['internetuserate'] = pandas.to_numeric(data['internetuserate'], errors='coerce')
+data['employrate'] = pandas.to_numeric(data['employrate'], errors='coerce')
+data['urbanrate'] = pandas.to_numeric(data['urbanrate'], errors='coerce')
+
+
+# Piking up the subset of data in order to trim some extreme low values.
+# This operation also trim the empty or missin values.
+sub_data =data[(data['employrate']>=15) & (data['urbanrate']>=30) & data['country']]
+
+print('Sub table with only necessary coluns is as following. (will display on 20 lines)')
+print('--------------------------------------------------------------------------------')
+print(sub_data)
+print('--------------------------------------------------------------------------------')
+print ('Number of Rows in Modified Table: ', len(sub_data))
+print ('Number of Columns in Modified Table: ', len(sub_data.columns))
+print('--------------------------------------------------------------------------------')
+print('')
+
+
+# Creating completely new Dataframe object, and this allows us to make some modification without affecting the previus sub_data
+sub2 = sub_data.copy(deep=True)
+
+
+# Splitting urbanrate and employrate numeric values to easy interpreteable values in order to read and evaluate the result.
+# We will have 4 readable values in new column, thez are "low","medium","good","verygood"
+sub2['urbanrate4']=pandas.cut(sub2['urbanrate'], 4, labels=["low","medium","good","verygood"])
+sub2['employrate4']=pandas.cut(sub2['employrate'], 4, labels=["low","medium","good","verygood"])
+
+# To display the frequency distribution of each new value in table
+c1 = sub2['urbanrate4'].value_counts(sort=False, dropna=True)
+c2 = sub2['employrate4'].value_counts(sort=False, dropna=True)
+print('--------------------------------------------------------------------------------')
+print('Frequency distribution for "urbanrate":')
+print(c1)
+print('--------------------------------------------------------------------------------')
+print('--------------------------------------------------------------------------------')
+print('Frequency distribution for "employrate":')
+print(c2)
+print('--------------------------------------------------------------------------------')
+print('')
+
+# Printing the the table in more interpreteable format
+print('--------------------------------------------------------------------------------')
+print('Table sorted according to "internetuserate" in descending order:')
+print('--------------------------------------------------------------------------------')
+print(sub2.sort_values('internetuserate', ascending=False).head(20))
+print('')
+print('--------------------------------------------------------------------------------')
+print('Table sorted according to "internetuserate" in ascending order:')
+print('--------------------------------------------------------------------------------')
+print(sub2.sort_values('internetuserate', ascending=True).head(20))
+print('')
+
+# THE END of script
+
+
+
+
+
+
+'''
+--------------------------------------------------------------------------------
+OUTPUT of above script is as following:
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Number of Rows in Original Table:  213
+Number of Columns in Original Table:  4
+--------------------------------------------------------------------------------
+
+Sub table with only necessary coluns is as following. (will display on 20 lines)
+--------------------------------------------------------------------------------
+                country  internetuserate  employrate  urbanrate
+1               Albania        44.989947   51.400002      46.72
+2               Algeria        12.500073   50.500000      65.22
+4                Angola         9.999954   75.699997      56.70
+6             Argentina        36.000335   58.400002      92.00
+7               Armenia        44.001025   40.099998      63.86
+..                  ...              ...         ...        ...
+207           Venezuela        35.850437   59.900002      93.32
+209  West Bank and Gaza        36.422772   32.000000      71.90
+210         Yemen, Rep.        12.349750   39.000000      30.64
+211              Zambia        10.124986   61.000000      35.42
+212            Zimbabwe        11.500415   66.800003      37.34
+
+[144 rows x 4 columns]
+--------------------------------------------------------------------------------
+Number of Rows in Modified Table:  144
+Number of Columns in Modified Table:  4
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Frequency distribution for "urbanrate":
+low         34
+medium      40
+good        45
+verygood    25
+Name: urbanrate4, dtype: int64
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Frequency distribution for "employrate":
+low         14
+medium      48
+good        67
+verygood    15
+Name: employrate4, dtype: int64
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Table sorted according to "internetuserate" in descending order:
+--------------------------------------------------------------------------------
+                  country  internetuserate  employrate  urbanrate urbanrate4 employrate4
+85                Iceland        95.638113   73.599998      92.26   verygood    verygood
+144                Norway        93.277508   65.000000      77.48       good        good
+136           Netherlands        90.703555   61.299999      81.82       good        good
+111            Luxembourg        90.079527   53.500000      82.44       good      medium
+184                Sweden        90.016190   60.700001      84.54   verygood        good
+50                Denmark        88.770254   63.099998      86.68   verygood        good
+63                Finland        86.898845   57.200001      63.30     medium        good
+202        United Kingdom        84.731705   59.299999      89.94   verygood        good
+139           New Zealand        83.002584   65.000000      86.56   verygood        good
+69                Germany        82.526898   53.500000      73.64       good      medium
+100           Korea, Rep.        82.515928   58.900002      81.46       good        good
+185           Switzerland        82.166660   64.300003      73.48       good        good
+156                 Qatar        81.590397   76.000000      95.64   verygood    verygood
+32                 Canada        81.338393   63.500000      80.40       good        good
+174       Slovak Republic        79.889777   53.400002      56.56     medium      medium
+201  United Arab Emirates        77.996781   75.199997      77.88       good    verygood
+94                  Japan        77.638535   57.299999      66.48       good        good
+64                 France        77.498619   51.200001      77.36       good      medium
+9               Australia        75.895654   61.500000      88.74   verygood        good
+203         United States        74.247572   62.299999      81.70       good        good
+
+--------------------------------------------------------------------------------
+Table sorted according to "internetuserate" in ascending order:
+--------------------------------------------------------------------------------
+                  country  internetuserate  employrate  urbanrate urbanrate4 employrate4
+41       Congo, Dem. Rep.         0.720009   66.199997      33.96        low        good
+78                 Guinea         0.999959   81.500000      34.44        low    verygood
+197          Turkmenistan         2.199998   58.500000      48.62     medium        good
+35   Central African Rep.         2.300027   71.300003      38.58        low    verygood
+89                   Iraq         2.471948   37.400002      66.60       good         low
+45          Cote d'Ivoire         2.599974   59.900002      48.78     medium        good
+118                  Mali         2.699966   45.700001      32.18        low      medium
+122            Mauritania         2.999803   46.900002      41.00        low      medium
+19                  Benin         3.129962   71.599998      41.20        low    verygood
+31               Cameroon         3.999977   59.099998      56.76     medium        good
+131            Mozambique         4.170136   77.000000      36.84        low    verygood
+42            Congo, Rep.         4.999875   64.199997      61.34     medium        good
+192                  Togo         5.379820   63.900002      42.00        low        good
+24               Botswana         5.999836   46.000000      59.58     medium      medium
+57      Equatorial Guinea         6.003437   61.700001      39.38        low        good
+133               Namibia         6.500823   42.000000      36.84        low         low
+103                  Laos         6.999880   78.199997      30.88        low    verygood
+107               Liberia         7.000214   66.000000      60.14     medium        good
+66                  Gabon         7.232224   59.000000      85.04   verygood        good
+81                  Haiti         8.370207   55.900002      46.84        low      medium
+
+
+
+'''
