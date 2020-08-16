@@ -1,0 +1,107 @@
+"""
+My theory: internetuserate should increase, by increase urbanrate (categorized urbanrate).
+I converted the actual numeric rate of urbanrate into 4 categories, displayed as low, medium, high, veryhigh. Mere details are below.
+
+First I will plot the internetuserates distribution. (univariate graph)
+Second graph wıll be used the relation of urbanrate and internetuserate. (bivariate graph)
+
+@author: mm
+"""
+# Importing necessary libraries to be used in program
+import pandas
+import seaborn
+import matplotlib.pyplot as plt
+
+
+# Reading CSV file into Pandas DataFrame,and the displaying the dimensions of table.
+data = pandas.read_csv('gapminder.csv', low_memory=False)
+data = data[['country', 'internetuserate', 'employrate', 'urbanrate']]
+# Next lines will print the the number of Rows, Columns and then the will print empty line for nicer looking output.
+print('--------------------------------------------------------------------------------')
+print ('Number of Rows in Original Table: ', len(data))
+print ('Number of Columns in Original Table: ', len(data.columns))
+print('--------------------------------------------------------------------------------')
+print('')
+
+
+# Need to convert values to integer, in order to be able make some aritmetic operations.
+# Converting string values in Table into float numbers.
+data['internetuserate'] = pandas.to_numeric(data['internetuserate'], errors='coerce')
+data['employrate'] = pandas.to_numeric(data['employrate'], errors='coerce')
+data['urbanrate'] = pandas.to_numeric(data['urbanrate'], errors='coerce')
+
+
+
+# Creating new sub table, which has only inernetuserate. And in this table cuting the extremes, values below 10 and values over 90.
+# Pıcked only one column, because my intention is to show the distribution of the values in this column.
+sub1_data = data[(data['internetuserate']>=10) & (data['internetuserate']<=90)]
+sub1 = sub1_data.copy(deep=True)
+
+# Univariate histogram for quantitative variable.
+# Showing the distribution of internetuserate, numbers are grouped in 20 bars.
+seaborn.distplot(sub1["internetuserate"].dropna(), kde=False, bins=20);
+plt.xlabel('percentage of population using Internet')
+plt.title('Internet userate dstribution graph')
+
+
+# Piking up the subset of data in order to trim some extreme low values.
+# This operation also trim the empty or missin values.
+sub_data =data[(data['employrate']>=15) & (data['urbanrate']>=30) & data['country']]
+
+
+# Creating completely new Dataframe object, and this allows us to make some modification without affecting the previus sub_data
+sub2 = sub_data.copy(deep=True)
+
+
+# Splitting urbanrate and employrate numeric values to easy interpreteable values in order to read and evaluate the result.
+# We will have 4 readable values in new column, thez are "low","medium","good","verygood"
+sub2['urbanrate4']=pandas.cut(sub2['urbanrate'], 4, labels=["low","medium","high","veryhigh"])
+sub2['employrate4']=pandas.cut(sub2['employrate'], 4, labels=["low","medium","good","verygood"])
+
+
+# you can rename categorical variable values for graphing if original values are not informative 
+# first change the variable format to categorical if you haven’t already done so
+sub2['urbanrate4'] = sub2['urbanrate4'].astype('category')
+sub2['employrate4'] = sub2['employrate4'].astype('category')
+
+
+# calculating mean of internet userate for specific urbanrate4 category
+# This calculation is made show the consistency of bivariate graph, which will be drawen in next step.
+print("Mean of intenetuserate for 'low' urbanrate4 category:      ", sub2[sub2['urbanrate4']=='low']['internetuserate'].mean())
+print("Mean of intenetuserate for 'medium' urbanrate4 category:   ", sub2[sub2['urbanrate4']=='medium']['internetuserate'].mean())
+print("Mean of intenetuserate for 'high' urbanrate4 category:     ", sub2[sub2['urbanrate4']=='high']['internetuserate'].mean())
+print("Mean of intenetuserate for 'veryhigh' urbanrate4 category: ", sub2[sub2['urbanrate4']=='veryhigh']['internetuserate'].mean())
+
+
+# bivariate graph
+# Category of urbanization rate show the quantativbe mean value of internet usage.
+seaborn.catplot(x='urbanrate4', y='internetuserate', data=sub2, kind="bar", ci=None)
+plt.xlabel('Category of "urbanrate4"')
+plt.ylabel('Mean value of "internetuserate"')
+
+
+# THE END of script
+
+
+
+"""
+---------------------------------------
+OUTPUT of Program looks like following:
+---------------------------------------
+--------------------------------------------------------------------------------
+Number of Rows in Original Table:  213
+Number of Columns in Original Table:  4
+--------------------------------------------------------------------------------
+
+Mean of intenetuserate for 'low' urbanrate4 category:       17.57427195238547
+Mean of intenetuserate for 'medium' urbanrate4 category:    28.657664082781896
+Mean of intenetuserate for 'high' urbanrate4 category:      53.033917284791954
+Mean of intenetuserate for 'veryhigh' urbanrate4 category:  59.33851760682095
+
+
+![bivariate_graph](https://github.com/mehmet-y/Data_Management_and_Visualization/blob/master/bivariate%20graph.png)
+
+![univariate_graph](https://github.com/mehmet-y/Data_Management_and_Visualization/blob/master/univariate%20graph.png)
+
+
+
